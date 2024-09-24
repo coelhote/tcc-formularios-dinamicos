@@ -398,7 +398,7 @@ body {
     cursor: pointer;
 }
 
-.big-square span{
+.big-square span {
     text-decoration: none;
 }
 
@@ -406,7 +406,16 @@ body {
     margin-right: 0;
 }
 
-.error { 
+.error {
     color: red !important;
     border-color: red !important;
+}
+
+.success {
+    color: green;
+}
+
+.alert,
+.warning {
+    color: red;
 }
