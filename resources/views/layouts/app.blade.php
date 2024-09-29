@@ -7,28 +7,45 @@
     <title>@yield('title', 'Minha Aplicação')</title>
     <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     @yield('scripts')
 </head>
 
-<body class="antialiased">
-    <header class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
-        
+<body class="antialiased bg-light">
+    <header class="bg-primary text-white">
+        <nav class="navbar navbar-expand-lg navbar-light container">
+            <a class="navbar-brand" href="{{ route('home') }}">Minha Aplicação</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home') }}">Página Principal</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('questions.list') }}">Listar Perguntas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('forms.list') }}">Listar Formulários</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     </header>
 
-    <main>
+    <main class="container my-4">
         @yield('content')
     </main>
 
-    <footer></footer>
-
+    <footer class="bg-light text-dark text-center py-3">
+        <p>&copy; {{ date('Y') }} Minha Aplicação. Todos os direitos reservados.</p>
+    </footer>
 </body>
 
 </html>

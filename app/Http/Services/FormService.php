@@ -71,7 +71,7 @@ class FormService {
             $form->save();
 
             $formId = $form->id;
-            $key = 1;
+            $keyFormQuestion = 1;
             if (isset($body['steps'])) {
                 DB::statement('DELETE FROM form_question WHERE form_id = ?', [$formId]);
             }
@@ -80,11 +80,11 @@ class FormService {
                     $formQuestion = new FormQuestion();
                     $formQuestion->form_id = $formId;
                     $formQuestion->question_id = $questionId;
-                    $formQuestion->order = $key;
+                    $formQuestion->order = $keyFormQuestion;
                     $formQuestion->step = $steps['number'];
                     $formQuestion->save();
 
-                    $key++;
+                    $keyFormQuestion++;
                 }
 
                 $formulaStep = Formula::where('form_id', $formId)->where('form_step', $steps['number'])->first();

@@ -3,15 +3,13 @@
 @section('title', isset($form) ? 'Editar Formulário' : 'Cadastrar Formulário')
 
 @section('content')
-<div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+<div class="container my-4">
 
-    <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
-        <div class="ml-2 text-lg leading-7 font-semibold">
-            <h3 class="text-gray-900 dark:text-white align-center">Cadastro de formulário</h3>
-        </div>
-        <hr />
-        <div class="grid grid-cols-1 md:grid-cols-1">
-            {!! Form::open(['method' => 'POST', 'onsubmit' => 'validateForm(event)', 'id' => 'formForm', 'class' => 'row g-3 p-4']) !!}
+    <div class="mt-4 bg-white overflow-hidden shadow sm:rounded-lg">
+        <div class="p-4">
+            <h3 class="text-gray-900 text-center">{{ isset($form) ? 'Edição de Formulário' : 'Cadastro de Formulário' }}</h3>
+            <hr />
+            {!! Form::open(['method' => 'POST', 'onsubmit' => 'validateForm(event)', 'id' => 'formForm', 'class' => 'row g-3']) !!}
             @csrf
             <input type="hidden" name="id" value="{{ isset($form) ? $form->id : null }}">
             <div class="col-12">
@@ -21,17 +19,16 @@
 
             <div class="row col-12 mt-3" id="steps"></div>
 
-            <div class="col-12 mt-3 hidden" id="addRow">
-                <a type="button" id="addRowButton" style="text-decoration: underline; color: blue">Adicionar nova etapa</a>
+            <div class="col-12 mt-3 text-end">
+                <a type="button" id="addRowButton" class="text-primary" style="text-decoration: underline;">Adicionar nova etapa</a>
             </div>
 
-            <div class="col-12">
-                {!! Form::button('Cancelar', ['class' => 'btn btn-secondary', 'onclick' => "window.location.href='" . route('forms.list') . "'"]) !!}
+            <div class="col-12 mt-4">
+                {!! Form::button('Cancelar', ['class' => 'btn btn-secondary me-2', 'onclick' => "window.location.href='" . route('forms.list') . "'"]) !!}
                 {!! Form::submit('Enviar', ['class' => 'btn btn-primary submitForm']) !!}
             </div>
             {!! Form::close() !!}
         </div>
-        <input type="text">
     </div>
 
     <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="questionModalLabel" aria-hidden="true">
@@ -44,8 +41,7 @@
                     </button>
                 </div>
                 <div class="modal-body" style="max-height: 300px; overflow-y: scroll">
-                    <div id="questionList">
-                    </div>
+                    <div id="questionList"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -55,9 +51,9 @@
         </div>
     </div>
 
-
 </div>
 @endsection
+
 
 @section('scripts')
 <script>
@@ -85,7 +81,7 @@
         const nameField = document.querySelector('[name="name"]');
         const stepsDiv = document.getElementById('steps');
         const addRowButton = document.getElementById('addRowButton');
-        const formulaRegex = /^[()0-9Q+*\-.\/ ]+$/;
+        const formulaRegex = /^[()=?:0-9Q+*\-.\/ ]+$/;
         let stepIndex = 1;
         let questionCounter = 1;
         let selectedStep;
@@ -101,16 +97,16 @@
             stepDiv.classList.add('step-block', 'mt-3');
 
             stepDiv.innerHTML = `
-                <div class="col-12 p-3" style="border: 1px solid #ccc; border-radius: 5px">
+                <div class="col-12 p-3 border rounded step-container">
                     <label class="form-label">Etapa ${index}:</label>
                     <input type="hidden" name="steps[${index}][number]" value="${index}">
                     <div class="step-questions" id="step-questions-${index}"></div>
-                    <a type="button" class="add-question-btn" data-step="${index}" style="text-decoration: underline; color: blue">Adicionar pergunta</a>
-                    <div class="col-12 p-3" style="border: 1px solid #ccc; border-radius: 5px">
+                    <a type="button" class="add-question-btn text-blue" data-step="${index}">Adicionar pergunta</a>
+                    <div class="col-12 p-3 border rounded mt-3">
                         <label class="form-label">Fórmula:</label>
                         <input type="text" data-stepFormula="${index}" name="steps[${index}][formula]" class="form-control formula" placeholder="Digite...">
                         <div id="conditions-container-${index}" class="conditions-container m-3"></div>
-                        <a type="button" class="add-condition-btn" data-step="${index}" style="text-decoration: underline; color: blue">Adicionar condição</a>
+                        <a type="button" class="add-condition-btn text-blue" data-step="${index}">Adicionar condição</a>
                     </div>
                 </div>
             `;
@@ -123,7 +119,7 @@
             conditionDiv.classList.add('condition-block', 'mt-3');
 
             conditionDiv.innerHTML = `
-                <div class="col-12 m-3 p-3 row" style="border: 1px solid #ccc; border-radius: 5px">
+                <div class="col-12 m-3 p-3 row border rounded condition-container">
                     <div class="col-4">
                         <label class="form-label">Condição:</label>
                         <input type="text" name="steps[${stepIndex}][formula_response][conditions][]" class="form-control condition-input" placeholder="Digite a condição">
@@ -216,13 +212,13 @@
             const selectedQuestionText = $('input[name="selected_question"]:checked').next('label').text();
             if (selectedQuestionId) {
                 const questionBlock = `
-                    <div class="question-block mt-2" id="question-${selectedQuestionId}">
+                    <div class="question-block mt-2 border rounded p-2" id="question-${selectedQuestionId}">
                         <input type="hidden" name="steps[${selectedStep}][questions][]" value="${selectedQuestionId}">
                         <span>Q${questionCounter} - ${selectedQuestionText}</span>
-                        <a href="#" class="remove-question" data-id="${selectedQuestionId}" style="text-decoration: underline; color: red; margin-left: 10px;">Excluir</a>
+                        <a href="#" class="remove-question text-red" data-id="${selectedQuestionId}">Excluir</a>
                     </div>
                 `;
-                console.log(selectedStep);
+
                 $(`#step-questions-${selectedStep}`).append(questionBlock);
                 questionCounter++;
                 $('#questionModal').modal('hide');
@@ -254,10 +250,10 @@
                 }
 
                 const questionBlock = `
-                        <div class="question-block mt-2" id="question-${questionId}">
+                        <div class="question-block mt-2 border rounded p-2" id="question-${questionId}">
                             <input type="hidden" name="steps[${step}][questions][]" value="${questionId}">
                             <span>Q${item.order} - ${question.description}</span>
-                            <a href="#" class="remove-question" data-id="${questionId}" style="text-decoration: underline; color: red; margin-left: 10px;">Excluir</a>
+                            <a href="#" class="remove-question text-red" data-id="${questionId}">Excluir</a>
                         </div>
                     `;
                 $(`#step-questions-${step}`).append(questionBlock);

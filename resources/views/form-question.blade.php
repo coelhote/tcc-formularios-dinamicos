@@ -3,10 +3,13 @@
 @section('title', isset($question) ? 'Editar Pergunta' : 'Cadastrar Pergunta')
 
 @section('content')
-<div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-    <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
-        <div class="grid grid-cols-1 md:grid-cols-1">
-            {!! Form::open(['method' => 'POST', 'onsubmit' => 'validateForm(event)', 'id' => 'questionForm', 'class' => 'row g-3 p-4']) !!}
+<div class="container my-4">
+
+    <div class="mt-4 bg-white overflow-hidden shadow sm:rounded-lg">
+        <div class="p-4">
+            <h3 class="text-gray-900 text-center">{{ isset($question) ? 'Edição de Pergunta' : 'Cadastro de Pergunta' }}</h3>
+            <hr />
+            {!! Form::open(['method' => 'POST', 'onsubmit' => 'validateForm(event)', 'id' => 'questionForm', 'class' => 'row g-3']) !!}
             @csrf
 
             <div class="col-12">
@@ -17,16 +20,16 @@
             <div class="row col-12 mt-3">
                 {!! Form::label('type', 'Escolha o tipo da resposta:', ['class' => 'form-label', 'id' => 'selectTypeAsnwer']) !!}
                 <div class="col-sm-3 col-md-3">
-                    <label class="select-type-answer">
-                        <input type="radio" name="type" value="radio" @checked(isset($question) && $question->type == 'radio')>
+                        <label class="select-type-answer">
+                            <input type="radio" name="type" value="radio" @checked(isset($question) && $question->type == 'radio')>
                         <div class="square shadow">
                             <input type="radio" id="radio" name="example" disabled>
                             <label for="radio">Única</label>
                         </div>
-                    </label>
-                </div>
+                        </label>
+                    </div>
                 <!-- <div class="col-sm-3 col-md-3">
-                    <label class="select-type-answer">
+                        <label class="select-type-answer">
                         <input type="radio" name="type" value="checkbox" @checked(isset($question) && $question->type == 'checkbox' )>
                         <div class="square shadow">
                             <input type="checkbox" id="radio" name="example" disabled>
@@ -42,35 +45,35 @@
                                 <option disabled selected>Selecione</option>
                             </select>
                         </div>
-                    </label>
-                </div>
+                        </label>
+                    </div>
                 <div class="col-sm-3 col-md-3">
-                    <label class="select-type-answer">
+                        <label class="select-type-answer">
                         <input type="radio" name="type" value="text" @checked(isset($question) && $question->type == 'text' )>
                         <div class="square shadow">
                             <input type="text" placeholder="Digite..." style="border: 1px solid #ced4da; border-radius: 0.25rem; width:100px " disabled>
                         </div>
-                    </label>
-                </div>
+                        </label>
+                    </div>
                 <div class="col-sm-3 col-md-3">
-                    <label class="select-type-answer">
+                        <label class="select-type-answer">
                         <input type="radio" name="type" value="number" @checked(isset($question) && $question->type == 'number' )>
                         <div class="square shadow">
                             <input type="text" placeholder="Número" style="border: 1px solid #ced4da; border-radius: 0.25rem; width:100px " disabled>
-                        </div>
-                    </label>
+                    </div>
                 </div>
             </div>
 
             <div class="row col-12 mt-3 hidden" id="options">
+                <!-- Aqui você pode adicionar opções dinâmicas -->
             </div>
 
-            <div class="col-12 mt-3 hidden" id="addRow">
-                <a type="button" id="addRowButton" style="text-decoration: underline; color: blue">Adicionar nova linha</a>
+            <div class="col-12 mt-3 text-center hidden" id="addRow">
+                <a type="button" id="addRowButton" class="text-primary" style="text-decoration: underline;">Adicionar nova opção</a>
             </div>
 
-            <div class="col-12">
-                {!! Form::button('Cancelar', ['class' => 'btn btn-secondary', 'onclick' => "window.location.href='" . route('questions.list') . "'"]) !!}
+            <div class="col-12 mt-4">
+                {!! Form::button('Cancelar', ['class' => 'btn btn-secondary me-2', 'onclick' => "window.location.href='" . route('questions.list') . "'"]) !!}
                 {!! Form::submit('Enviar', ['class' => 'btn btn-primary submitQuestion']) !!}
             </div>
             {!! Form::close() !!}
@@ -79,6 +82,7 @@
 </div>
 
 @endsection
+
 
 @section('scripts')
 <script>

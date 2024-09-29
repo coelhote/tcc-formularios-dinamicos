@@ -15,13 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [FormController::class, 'homePage']);
+Route::get('/', [FormController::class, 'homePage'])->name('home');
 
 /** Question **/
 Route::get('/form/question/create', [QuestionController::class, 'formQuestion'])->name('questions.create');
 Route::get('/form/question/list', [QuestionController::class, 'getAllList'])->name('questions.list');
 Route::get('/form/question/{id}/edit', [QuestionController::class, 'editQuestion'])->name('questions.edit');
-Route::get('/form/question/{id}/delete', [QuestionController::class, 'destroy'])->name('questions.destroy');
+Route::post('/form/question/{id}/delete', [QuestionController::class, 'destroy'])->name('questions.destroy');
 Route::get('/form/question/index', [QuestionController::class, 'index'])->name('questions.index');
 Route::resource('/question', QuestionController::class);
 
@@ -29,7 +29,7 @@ Route::resource('/question', QuestionController::class);
 Route::get('/form/form/create', [FormController::class, 'formForm'])->name('forms.create');
 Route::get('/form/form/list', [FormController::class, 'index'])->name('forms.list');
 Route::get('/form/form/{id}/edit', [FormController::class, 'editForm'])->name('forms.edit');
-Route::get('/form/form/{id}/delete', [FormController::class, 'destroy'])->name('forms.destroy');
+Route::post('/form/form/{id}/delete', [FormController::class, 'destroy'])->name('forms.destroy');
 Route::get('/form/response/{id}', [FormController::class, 'response'])->name('forms.response');
 Route::resource('/form', FormController::class);
 
