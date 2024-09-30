@@ -17,6 +17,10 @@
 </head>
 
 <body class="antialiased bg-light">
+    <div id="loading" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
     <header class="bg-primary text-white">
         <nav class="navbar navbar-expand-lg navbar-light container">
             <a class="navbar-brand" href="{{ route('home') }}">Minha Aplicação</a>

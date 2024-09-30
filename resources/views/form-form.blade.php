@@ -59,14 +59,9 @@
 <script>
     function validateForm(e) {
         e.preventDefault();
+        $('#loading').show();
 
         const formData = new FormData(document.getElementById('formForm'));
-        let formDataToConsole;
-        formData.forEach((value, key) => {
-            formDataToConsole += `${key}: ${value} \n`;
-        });
-        console.log(formDataToConsole);
-
 
         axios.post('/form', formData)
             .then((response) => {
@@ -74,6 +69,9 @@
             })
             .catch((error) => {
                 console.error(error);
+            })
+            .finally(() => {
+                $('#loading').hide();
             });
     }
 

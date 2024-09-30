@@ -107,7 +107,7 @@ class FormController extends Controller
         return view('home-page', ['data' => $response->toArray()]);
     }
 
-    public function response($id) {
+    public function response($id, $protocol) {
         $response = $this->formService->findOneWithAnswers($id);
 
         return view('form-response', [

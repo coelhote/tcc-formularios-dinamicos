@@ -88,6 +88,7 @@
 <script>
     function validateForm(e) {
         e.preventDefault();
+        $('#loading').show();
 
         const formData = new FormData(document.getElementById('questionForm'));
 
@@ -97,6 +98,9 @@
             })
             .catch((error) => {
                 console.error(error);
+            })
+            .finally(() => {
+                $('#loading').hide();
             });
     }
 
