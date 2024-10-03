@@ -96,7 +96,14 @@
 
             stepDiv.innerHTML = `
                 <div class="col-12 p-3 border rounded step-container">
-                    <label class="form-label">Etapa ${index}:</label>
+                    <div class="container row items-center">
+                        <div class="col-2">
+                            <label class="form-label">Etapa ${index}:</label>
+                        </div>
+                        <div class="col-10">
+                            <input type="text" name="steps[${index}][step_name]" class="form-control step-name" placeholder="Nome da etapa">
+                        </div>
+                    </div>
                     <input type="hidden" name="steps[${index}][number]" value="${index}">
                     <div class="step-questions" id="step-questions-${index}"></div>
                     <a type="button" class="add-question-btn text-blue" data-step="${index}">Adicionar pergunta</a>
@@ -236,14 +243,17 @@
         @if(isset($form) && $form->id)
             const formQuestions = @json($questions);
             const formFormulas = @json($formulas);
+            let stepName = '';
 
             formQuestions.forEach(function(item) {
                 const step = item.step;
                 const question = item.question;
                 const questionId = item.question_id;
+                stepName = item.step_name
 
                 if (!$(`#step-questions-${step}`).length) {
                     const newStepBlock = createStepBlock(step);
+                    $(newStepBlock).find('input[name="steps[' + step + '][step_name]"]').val(stepName);
                     stepsDiv.appendChild(newStepBlock);
                 }
 

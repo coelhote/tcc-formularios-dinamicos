@@ -26,14 +26,12 @@ class FormService {
         $form = Form::find($id);
     
         if (!$form) {
-            // Retornar um erro ou um redirecionamento caso o formulário não exista
             abort(404);
         }
     
-        // Obter as etapas distintas
         $steps = FormQuestion::select('step')->distinct()->where('form_id', $id)->get();
     
-        $return = ['steps' => []]; // Inicializando o array de retorno
+        $return = ['steps' => []];
     
         foreach ($steps as $step) {
             $formQuestions = FormQuestion::with('question.answers')
@@ -56,6 +54,11 @@ class FormService {
         return ['form' => $form, 'steps' => $return['steps']];
     }
     
+    public function getStepsByFormId($id) {
+        $form = Form::select('id', 'name')->find($id);
+        $steps = FormQuestion::select('step', 'step_name')->distinct()->where('form_id', $id)->get();
+        return ['form' => $form, 'steps' => $steps];
+    }
 
     public function saveOrUpdate($body) {
 
@@ -82,6 +85,7 @@ class FormService {
                     $formQuestion->question_id = $questionId;
                     $formQuestion->order = $keyFormQuestion;
                     $formQuestion->step = $steps['number'];
+                    $formQuestion->step_name = $steps['step_name'] ?? '';
                     $formQuestion->save();
 
                     $keyFormQuestion++;

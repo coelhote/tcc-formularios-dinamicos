@@ -68,7 +68,7 @@
                         <div class="step-actions">
                             <button type="button" class="btn btn-secondary clear-form">Limpar</button>
                             <button type="button" class="btn btn-primary calculate-step">Calcular</button>
-                            <button type="button" class="btn btn-success next-step hidden">Próxima página</button>
+                            <button type="button" class="btn btn-success next-step">Salvar</button>
                         </div>
                     </div>
                 </div>
@@ -86,13 +86,21 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const steps = @json($steps);
-        let currentStep = 1;
+        const url = window.location.pathname;
+        const parts = url.split('/');
+        formId = parts[parts.length - 3];
+        currentStep = parts[parts.length - 2];
+        protocolUuid = parts[parts.length - 1];
         let totalSteps = steps.length;
 
         function updateVisibility() {
+            console.log('entrou')
             $('.step').each(function() {
+                console.log('each step')
                 const stepData = $(this).data('step');
-                if (currentStep !== stepData) {
+                console.log(stepData)
+                console.log(currentStep)
+                if (currentStep != stepData) {
                     $(this).addClass('hidden');
                     if (currentStep == totalSteps) {
                         $('.next-step').addClass('disabled');
@@ -207,9 +215,6 @@
         $('.next-step').on('click', function() {
             $('#loading').show();
             const values = {};
-            const url = window.location.pathname;
-            const parts = url.split('/');
-            const protocolUuid = parts[parts.length - 1];
 
             $('.step').each(function() {
                 const stepData = $(this).data('step');
@@ -232,10 +237,12 @@
                 }
             });
 
-            axios.put('/response/' + protocolUuid, {'data': values}).then((response) => {
+            axios.put('/response/' + protocolUuid, {'data': values})
+            .then((response) => {
                 if (response.status == 200) {
-                    currentStep++;
-                    updateVisibility();
+                    // currentStep++;
+                    // updateVisibility();
+                    window.location.href = `/form/form/steps/${formId}/${protocolUuid}`;
                 }
             }).finally(() => {
                 $('#loading').hide();

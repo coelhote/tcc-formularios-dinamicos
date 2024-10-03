@@ -34,7 +34,7 @@
         })
             .then((response) => {
                 if (response.status == 200) {
-                    window.location.href = "{{ url('/form/response') }}/" + id + "/" + response.data.uuid;
+                    window.location.href = "/form/form/steps/" + id + "/" + response.data.uuid;
                 } else {
                     alert('Erro na solicitação. Tente novamente mais tarde!');
                     $('#loading').hide();

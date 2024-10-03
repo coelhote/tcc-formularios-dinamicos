@@ -6,6 +6,7 @@ use App\Http\Services\FormService;
 use App\Http\Services\QuestionService;
 use App\Models\Form;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class FormController extends Controller
 {
@@ -107,12 +108,17 @@ class FormController extends Controller
         return view('home-page', ['data' => $response->toArray()]);
     }
 
-    public function response($id, $protocol) {
+    public function response($id, $step, $protocol) {
         $response = $this->formService->findOneWithAnswers($id);
 
         return view('form-response', [
             'form' => $response['form'],
             'steps' => $response['steps'],
         ]);
+    }
+
+    public function getStepsByFormId($id) {
+        $response = $this->formService->getStepsByFormId($id);
+        return response()->json($response);
     }
 }

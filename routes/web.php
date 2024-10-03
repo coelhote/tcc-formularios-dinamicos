@@ -30,8 +30,12 @@ Route::resource('/question', QuestionController::class);
 Route::get('/form/form/create', [FormController::class, 'formForm'])->name('forms.create');
 Route::get('/form/form/list', [FormController::class, 'index'])->name('forms.list');
 Route::get('/form/form/{id}/edit', [FormController::class, 'editForm'])->name('forms.edit');
-Route::get('/form/response/{id}/{protocol}', [FormController::class, 'response'])->name('forms.response');
+Route::get('/form/response/{id}/{step}/{protocol}', [FormController::class, 'response'])->name('forms.response');
 Route::post('/form/form/{id}/delete', [FormController::class, 'destroy'])->name('forms.destroy');
+Route::get('/form/form/get-steps/{id}', [FormController::class, 'getStepsByFormId'])->name('forms.steps');
+Route::get('/form/form/steps/{id}/{protocol}', function () {
+    return view('form-response-steps');
+});
 Route::resource('/form', FormController::class);
 
 /** Response **/
