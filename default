@@ -1,0 +1,28 @@
+server {
+    listen 80;
+    server_name https://testedesarcopenia-cjgqb4fzhye4gnaj.brazilsouth-01.azurewebsites.net/;  # Substitua pelo seu domínio
+
+    root /home/site/wwwroot/default/public;  # Aponte para a pasta public do Laravel
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;  # Verifique a versão do PHP
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+    # Configurações adicionais
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires max;
+        log_not_found off;
+    }
+}
