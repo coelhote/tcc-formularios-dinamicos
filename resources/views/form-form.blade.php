@@ -61,6 +61,14 @@
         e.preventDefault();
         $('#loading').show();
 
+        const hasError = validateFormulaFields();
+        console.log(hasError)
+        if (hasError) {
+            $('#loading').hide();
+            alert('Existem campos com erro!');
+            return;
+        }
+
         const formData = new FormData(document.getElementById('formForm'));
 
         axios.post('/form', formData)
@@ -75,11 +83,36 @@
             });
     }
 
+    function validateFormulaFields() {
+        const formulaRegex = /^[<>&|!()=?:0-9Q+*\-.\/ ]+$/;
+        let hasError = false
+        const formulaField = document.querySelectorAll('.formula');
+        formulaField.forEach(function(formulaInput) {
+            const formulaValue = formulaInput.value;
+
+            if (!formulaRegex.test(formulaValue)) {
+                hasError = true;
+                formulaInput.classList.add('error');
+            }
+
+            const openCount = (formulaValue.match(/\(/g) || []).length;
+            const closeCount = (formulaValue.match(/\)/g) || []).length;
+
+            if (openCount !== closeCount) {
+                hasError = true;
+                formulaValue.classList.add('error');
+            }
+
+        })
+
+        return hasError;
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const nameField = document.querySelector('[name="name"]');
         const stepsDiv = document.getElementById('steps');
         const addRowButton = document.getElementById('addRowButton');
-        const formulaRegex = /^[()=?:0-9Q+*\-.\/ ]+$/;
+        const formulaRegex = /^[<>&|!()=?:0-9Q+*\-.\/ ]+$/;
         let stepIndex = 1;
         let questionCounter = 1;
         let selectedStep;
@@ -109,8 +142,24 @@
                 </div>
             `;
 
+            const formulaInput = stepDiv.querySelector('input.formula');
+            formulaInput.addEventListener('blur', function(e) {
+                const formulaInput = e.target;
+                const formulaValue = formulaInput.value;
+
+                const openCount = (formulaValue.match(/\(/g) || []).length;
+                const closeCount = (formulaValue.match(/\)/g) || []).length;
+
+                if (openCount !== closeCount) {
+                    formulaInput.classList.add('error');
+                } else {
+                    formulaInput.classList.remove('error');
+                }
+            });
+
             return stepDiv;
         }
+
 
         function createConditionBlock(stepIndex) {
             const conditionDiv = document.createElement('div');
@@ -147,7 +196,6 @@
                 const stepIndex = e.target.getAttribute('data-step');
                 const conditionsContainer = document.getElementById(`conditions-container-${stepIndex}`);
 
-                // Cria um novo bloco de condição
                 const newConditionBlock = createConditionBlock(stepIndex);
                 conditionsContainer.appendChild(newConditionBlock);
             }
@@ -170,6 +218,32 @@
                 }
             }
         });
+
+        stepsDiv.addEventListener('blur', function(e) {
+            console.log("Blur event triggered"); // Verifica se o evento está sendo disparado
+            if (e.target) {
+                console.log("Target element:", e.target); // Log do elemento alvo
+                if (e.target.classList.contains('formula')) {
+                    console.log("Element has 'formula' class"); // Verifica se a classe está presente
+                    
+                    const formula = e.target.value; // Obtém o valor da fórmula
+
+                    // Conta os parênteses abertos e fechados
+                    const openCount = (formula.match(/\(/g) || []).length;
+                    const closeCount = (formula.match(/\)/g) || []).length;
+
+                    // Verifica se as quantidades são iguais
+                    if (openCount === closeCount) {
+                        console.log("A quantidade de parênteses é igual.");
+                    } else {
+                        console.log("A quantidade de parênteses é diferente.");
+                    }
+
+                    console.log(`Parênteses abertos: ${openCount}, Parênteses fechados: ${closeCount}`);
+                }
+            }
+        });
+
 
         addRowButton.addEventListener('click', function(e) {
             e.preventDefault();

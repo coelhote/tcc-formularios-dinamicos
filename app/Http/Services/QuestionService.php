@@ -26,7 +26,7 @@ class QuestionService
 
         try {
             DB::beginTransaction();
-            if ($id) {
+            if ($body['id']) {
                 $question = Question::find($body['id']);
             } else {
                 $question = new Question();

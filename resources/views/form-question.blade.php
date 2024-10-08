@@ -11,7 +11,7 @@
             <hr />
             {!! Form::open(['method' => 'POST', 'onsubmit' => 'validateForm(event)', 'id' => 'questionForm', 'class' => 'row g-3']) !!}
             @csrf
-
+            <input type="hidden" name="id" value="{{ isset($question) ? $question->id : null }}">
             <div class="col-12">
                 {!! Form::label('description', 'Pergunta:', ['class' => 'form-label']) !!}
                 {!! Form::text('description', isset($question) ? $question->description : null, ['class' => 'form-control', 'placeholder' => 'Digite a pergunta']) !!}
@@ -65,7 +65,6 @@
             </div>
 
             <div class="row col-12 mt-3 hidden" id="options">
-                <!-- Aqui você pode adicionar opções dinâmicas -->
             </div>
 
             <div class="col-12 mt-3 text-center hidden" id="addRow">
