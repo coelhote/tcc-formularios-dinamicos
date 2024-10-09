@@ -115,4 +115,10 @@ class FormController extends Controller
             'steps' => $response['steps'],
         ]);
     }
+
+    public function protocol($protocol) {
+        $response = $this->formService->protocol($protocol);
+
+        return response()->json($response);
+    }
 }

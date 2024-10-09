@@ -29,10 +29,14 @@ Route::resource('/question', QuestionController::class);
 /** Form **/
 Route::get('/form/form/create', [FormController::class, 'formForm'])->name('forms.create');
 Route::get('/form/form/list', [FormController::class, 'index'])->name('forms.list');
+Route::get('/form/protocol/{protocol}', [FormController::class, 'protocol'])->name('forms.protocol');
 Route::get('/form/form/{id}/edit', [FormController::class, 'editForm'])->name('forms.edit');
 Route::get('/form/response/{id}/{protocol}', [FormController::class, 'response'])->name('forms.response');
 Route::post('/form/form/{id}/delete', [FormController::class, 'destroy'])->name('forms.destroy');
 Route::resource('/form', FormController::class);
+Route::get('/form/form/protocol/{protocol}', function () {
+    return view('form-protocol');
+});
 
 /** Response **/
 Route::resource('/response', ResponseController::class);

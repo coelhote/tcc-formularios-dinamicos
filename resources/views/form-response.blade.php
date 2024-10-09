@@ -68,7 +68,8 @@
                         <div class="step-actions">
                             <button type="button" class="btn btn-secondary clear-form">Limpar</button>
                             <button type="button" class="btn btn-primary calculate-step">Calcular</button>
-                            <button type="button" class="btn btn-success next-step hidden">Próxima página</button>
+                            <button type="button" class="btn btn-success next-step hidden">Próxima etapa</button>
+                            <button type="button" class="btn btn-success end-form hidden">Finalizar</button>
                         </div>
                     </div>
                 </div>
@@ -110,6 +111,11 @@
                 $('.next-step').addClass('hidden');
             }
 
+            if (currentStep == totalSteps) {
+                $('.next-step').addClass('hidden');
+                $('.end-form').removeClass('hidden');
+            }
+
         }
 
         $('.calculate-step').on('click', function() {
@@ -141,6 +147,8 @@
             });
 
             steps.forEach(step => {
+                let responseType = '';
+                let responseText = '';
                 if (step.step != currentStep) {
                     return;
                 }
@@ -167,10 +175,19 @@
                             document.getElementById('formulaStep' + step.step).innerText = "Formula: " + step.formula.description + " " + response.condition;
                             document.getElementById('result' + step.step).innerText = "Resultado: " + response.response;
                             $('#result' + step.step).addClass(response.response_type);
+                            responseType = response.response_type;
+                            responseText = response.response;
                         }
                     })
 
-                    $('.next-step').removeClass('hidden');
+                    if (responseType == 'success') {
+                        $('.end-form').removeClass('hidden');
+                    } else {
+                        $('.next-step').removeClass('hidden');
+                    }
+
+                    localStorage.setItem('reponseText', responseText);
+                    localStorage.setItem('responseType', responseType);
                 }
             })
         });
@@ -241,6 +258,46 @@
                 $('#loading').hide();
             }); 
         });
+
+        $('.end-form').on('click', function() {
+            $('#loading').show();
+
+            const values = {};
+            const url = window.location.pathname;
+            const parts = url.split('/');
+            const protocolUuid = parts[parts.length - 1];
+
+            $('.step').each(function() {
+                const stepData = $(this).data('step');
+                
+                if (stepData <= currentStep) {
+                    values[stepData] = values[stepData] || {};
+                    const questions = $(this).find('[data-question]');
+                    
+                    questions.each(function() {
+                        const questionKey = $(this).data('question');
+
+                        if ($(this).is('input[type="text"], input[type="number"]')) {
+                            values[stepData][questionKey] = $(this).val() || 0;
+                        } else if ($(this).is('input[type="radio"]:checked')) {
+                            values[stepData][questionKey] = $(this).val();
+                        } else if ($(this).is('select[data-question]')) {
+                            values[stepData][questionKey] = $(this).val();
+                        }
+                    });
+                }
+            });
+
+            axios.put('/response/' + protocolUuid, {'data': values}).then((response) => {
+                if (response.status == 200) {
+                   window.location.href = '/form/form/protocol/' + protocolUuid;
+                }
+            }).finally(() => {
+                $('#loading').hide();
+            }); 
+
+        });
+
 
         updateVisibility();
 

@@ -90,6 +90,11 @@
         formulaField.forEach(function(formulaInput) {
             const formulaValue = formulaInput.value;
 
+            if (formulaValue.trim() === '') {
+                hasError = false;
+                return;
+            }
+
             if (!formulaRegex.test(formulaValue)) {
                 hasError = true;
                 formulaInput.classList.add('error');

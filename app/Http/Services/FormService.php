@@ -6,6 +6,7 @@ use App\Models\Form;
 use App\Models\FormQuestion;
 use App\Models\Formula;
 use App\Models\FormulaResponse;
+use App\Models\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -128,5 +129,11 @@ class FormService {
             Log::error($e->getMessage());
             return $e;
         }
+    }
+
+    public function protocol($protocol) {
+        $responseData = Response::select('protocol', 'form_id')->with('form')->where('uuid', $protocol)->first();
+
+        return $responseData;
     }
 }

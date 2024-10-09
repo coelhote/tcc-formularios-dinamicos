@@ -29,10 +29,10 @@
                     <td>{{ $question['type'] }}</td>
                     <td>
                         <a href="{{ route('questions.edit', $question['id']) }}" class="btn btn-sm btn-warning">Editar</a>
-                        <a href="{{ route('questions.destroy', $question['id']) }}" class="btn btn-sm btn-danger" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $question['id'] }}').submit();">Excluir</a>
+                        <a class="btn btn-sm btn-danger" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $question['id'] }}').submit();">Excluir</a>
                         <form id="delete-form-{{ $question['id'] }}" action="{{ route('questions.destroy', $question['id']) }}" method="POST" style="display: none;">
                             @csrf
-                            @method('DELETE')
+                            @method('POST')
                         </form>
                     </td>
                 </tr>

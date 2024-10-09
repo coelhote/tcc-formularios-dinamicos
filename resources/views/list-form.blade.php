@@ -32,10 +32,10 @@
                     <td>{{ $formattedDate }}</td>
                     <td>
                         <a href="{{ route('forms.edit', $form['id']) }}" class="btn btn-sm btn-warning">Editar</a>
-                        <a href="{{ route('forms.destroy', $form['id']) }}" class="btn btn-sm btn-danger" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $form['id'] }}').submit();">Excluir</a>
+                        <a class="btn btn-sm btn-danger" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $form['id'] }}').submit();">Excluir</a>
                         <form id="delete-form-{{ $form['id'] }}" action="{{ route('forms.destroy', $form['id']) }}" method="POST" style="display: none;">
                             @csrf
-                            @method('DELETE')
+                            @method('POST')
                         </form>
                     </td>
                 </tr>
