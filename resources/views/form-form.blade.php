@@ -299,7 +299,7 @@
         });
 
 
-        @if(isset($form) && $form - > id)
+        @if(isset($form) && $form -> id)
         const formQuestions = @json($questions);
         const formFormulas = @json($formulas);
 
