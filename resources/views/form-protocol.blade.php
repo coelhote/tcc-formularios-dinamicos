@@ -26,7 +26,7 @@
             const parts = url.split('/');
             const protocolUuid = parts[parts.length - 1];
 
-            axios.get('/form/protocol/' + protocolUuid )
+            axios.get('/form/protocol/' + protocolUuid)
                 .then((response) => {
                     createHtml(response.data);
                 })
@@ -41,14 +41,21 @@
         function createHtml(data) {
             const responseType = localStorage.getItem('responseType');
             const responseText = localStorage.getItem('reponseText');
-            console.log(data);
+
             $('.response').append(
-                $('<h3>', {style: 'text-decoration: underline'}).text(data.protocol),
+                $('<h3>', {
+                    style: 'text-decoration: underline'
+                }).text(data.protocol),
                 $('<p>').text('referente ao formulário ').append(
-                    $('<span>', {style: 'text-decoration: underline'}).text(data.form.name)
+                    $('<span>', {
+                        style: 'text-decoration: underline'
+                    }).text(data.form.name)
                 ),
                 $('<p>').text('onde o resultado foi: ').append(
-                    $('<span>', {style: 'text-decoration: underline', class: responseType}).text(responseText)
+                    $('<span>', {
+                        style: 'text-decoration: underline',
+                        class: responseType
+                    }).text(responseText)
                 ),
             );
         }
@@ -56,7 +63,6 @@
         getProtocolData();
 
     })
-
 </script>
 
 @endsection

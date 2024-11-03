@@ -6,6 +6,7 @@ use App\Http\Services\FormService;
 use App\Http\Services\QuestionService;
 use App\Models\Form;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FormController extends Controller
 {
@@ -81,7 +82,10 @@ class FormController extends Controller
     public function destroy($id)
     {
         $form = Form::find($id);
-        $form->formQuestions()->delete();
+        DB::statement('DELETE FROM form_question WHERE form_id = ?', [$id]);
+        DB::statement('DELETE FROM formula_response WHERE formula_id IN (SELECT id FROM formula WHERE form_id = ?)', [$id]);
+        DB::statement('DELETE FROM formula WHERE form_id = ?', [$id]);
+        DB::statement('DELETE FROM response WHERE form_id = ?', [$id]);
         $form->delete();
 
         return redirect()->route('forms.list');

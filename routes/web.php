@@ -3,6 +3,8 @@
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ResponseController;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +42,13 @@ Route::get('/form/form/protocol/{protocol}', function () {
 
 /** Response **/
 Route::resource('/response', ResponseController::class);
+
+Route::post('has-permission', function (Request $request) {
+    if ($request->get('permission') == '!Ufsc@2024#') {
+        return response('true', 200);
+    }
+    return response('false', 403);
+});
 
 Route::get('/login', function () {
     return view('welcome');

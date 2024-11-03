@@ -62,7 +62,7 @@
         $('#loading').show();
 
         const hasError = validateFormulaFields();
-        console.log(hasError)
+
         if (hasError) {
             $('#loading').hide();
             alert('Existem campos com erro!');
@@ -225,26 +225,13 @@
         });
 
         stepsDiv.addEventListener('blur', function(e) {
-            console.log("Blur event triggered"); // Verifica se o evento está sendo disparado
             if (e.target) {
-                console.log("Target element:", e.target); // Log do elemento alvo
                 if (e.target.classList.contains('formula')) {
-                    console.log("Element has 'formula' class"); // Verifica se a classe está presente
-                    
-                    const formula = e.target.value; // Obtém o valor da fórmula
 
-                    // Conta os parênteses abertos e fechados
+                    const formula = e.target.value;
+
                     const openCount = (formula.match(/\(/g) || []).length;
                     const closeCount = (formula.match(/\)/g) || []).length;
-
-                    // Verifica se as quantidades são iguais
-                    if (openCount === closeCount) {
-                        console.log("A quantidade de parênteses é igual.");
-                    } else {
-                        console.log("A quantidade de parênteses é diferente.");
-                    }
-
-                    console.log(`Parênteses abertos: ${openCount}, Parênteses fechados: ${closeCount}`);
                 }
             }
         });
@@ -312,54 +299,54 @@
         });
 
 
-        @if(isset($form) && $form->id)
-            const formQuestions = @json($questions);
-            const formFormulas = @json($formulas);
+        @if(isset($form) && $form - > id)
+        const formQuestions = @json($questions);
+        const formFormulas = @json($formulas);
 
-            formQuestions.forEach(function(item) {
-                const step = item.step;
-                const question = item.question;
-                const questionId = item.question_id;
+        formQuestions.forEach(function(item) {
+            const step = item.step;
+            const question = item.question;
+            const questionId = item.question_id;
 
-                if (!$(`#step-questions-${step}`).length) {
-                    const newStepBlock = createStepBlock(step);
-                    stepsDiv.appendChild(newStepBlock);
-                }
+            if (!$(`#step-questions-${step}`).length) {
+                const newStepBlock = createStepBlock(step);
+                stepsDiv.appendChild(newStepBlock);
+            }
 
-                const questionBlock = `
+            const questionBlock = `
                         <div class="question-block mt-2 border rounded p-2" id="question-${questionId}">
                             <input type="hidden" name="steps[${step}][questions][]" value="${questionId}">
                             <span>Q${item.order} - ${question.description}</span>
                             <a href="#" class="remove-question text-red" data-id="${questionId}">Excluir</a>
                         </div>
                     `;
-                $(`#step-questions-${step}`).append(questionBlock);
+            $(`#step-questions-${step}`).append(questionBlock);
+        });
+
+        formFormulas.forEach(function(formulaItem) {
+            const step = formulaItem.form_step;
+            const formula = formulaItem.description;
+
+            if (!$(`#step-questions-${step}`).length) {
+                const newStepBlock = createStepBlock(step);
+                stepsDiv.appendChild(newStepBlock);
+            }
+
+            $(`input[name="steps[${step}][formula]"]`).val(formula);
+
+            const conditionsContainer = document.getElementById(`conditions-container-${step}`);
+
+            formulaItem.responses.forEach(function(response) {
+                const newConditionBlock = createConditionBlock(step);
+                $(newConditionBlock).find('input[name="steps[' + step + '][formula_response][conditions][]"]').val(response.condition);
+                $(newConditionBlock).find('input[name="steps[' + step + '][formula_response][responses][]"]').val(response.response);
+                $(newConditionBlock).find('select[name="steps[' + step + '][formula_response][response_types][]"]').val(response.response_type);
+                conditionsContainer.appendChild(newConditionBlock);
             });
+        });
 
-            formFormulas.forEach(function(formulaItem) {
-                const step = formulaItem.form_step;
-                const formula = formulaItem.description;
-
-                if (!$(`#step-questions-${step}`).length) {
-                    const newStepBlock = createStepBlock(step);
-                    stepsDiv.appendChild(newStepBlock);
-                }
-
-                $(`input[name="steps[${step}][formula]"]`).val(formula);
-
-                const conditionsContainer = document.getElementById(`conditions-container-${step}`);
-
-                formulaItem.responses.forEach(function(response) {
-                    const newConditionBlock = createConditionBlock(step);
-                    $(newConditionBlock).find('input[name="steps[' + step + '][formula_response][conditions][]"]').val(response.condition);
-                    $(newConditionBlock).find('input[name="steps[' + step + '][formula_response][responses][]"]').val(response.response);
-                    $(newConditionBlock).find('select[name="steps[' + step + '][formula_response][response_types][]"]').val(response.response_type);
-                    conditionsContainer.appendChild(newConditionBlock);
-                });
-            });
-
-            stepIndex = formQuestions.length + 1;
-            questionCounter = formQuestions.length + 1;
+        stepIndex = formQuestions.length + 1;
+        questionCounter = formQuestions.length + 1;
         @endif
 
     });
