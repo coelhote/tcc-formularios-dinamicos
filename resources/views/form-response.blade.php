@@ -30,7 +30,7 @@
                                 @foreach ($formQuestion['question']['answers'] as $key => $option)
                                 <div class="col-md-4">
                                     <div class="form-check">
-                                        <input class="form-check-input" value="{{$option['value']}}" type="{{$formQuestion['question']['type']}}" data-question="Q{{$formQuestion['order']}}" name="Q{{$formQuestion['order']}}" id="Q{{$formQuestion['order']}}{{$key}}">
+                                        <input class="form-check-input" value="{{$option['value']}}" type="{{$formQuestion['question']['type']}}" data-id="{{$option['id']}}" data-question="Q{{$formQuestion['order']}}" name="Q{{$formQuestion['order']}}" id="Q{{$formQuestion['order']}}{{$key}}">
                                         <label class="form-check-label" for="Q{{$formQuestion['order']}}{{$key}}">
                                             {{ $option['description'] }}
                                         </label>
@@ -89,6 +89,8 @@
         const steps = @json($steps);
         let currentStep = 1;
         let totalSteps = steps.length;
+        let finalResponseText = '';
+        let finalResponseType = '';
 
         function updateVisibility() {
             $('.step').each(function() {
@@ -146,6 +148,15 @@
                 }
             });
 
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            checkboxes.forEach(input => {
+                const questionKey = input.getAttribute('data-question');
+                if (!values[questionKey]) {
+                    values[questionKey] = [];
+                }
+                values[questionKey].push(input.value); // Armazena valores selecionados em um array
+            });
+
             steps.forEach(step => {
                 let responseType = '';
                 let responseText = '';
@@ -156,6 +167,7 @@
                 let formula = step.formula.description;
 
                 if (formula) {
+                    let forceEndForm = false;
                     for (const key in values) {
                         if (values.hasOwnProperty(key)) {
                             if (key && values[key]) {
@@ -177,17 +189,20 @@
                             $('#result' + step.step).addClass(response.response_type);
                             responseType = response.response_type;
                             responseText = response.response;
+                            if (response.condition.replace(/\D/g, "") > 100){
+                                forceEndForm = true;
+                            }
                         }
                     })
 
-                    if (responseType == 'success') {
+                    if (responseType == 'success' || forceEndForm ) {
                         $('.end-form').removeClass('hidden');
                     } else {
                         $('.next-step').removeClass('hidden');
                     }
 
-                    localStorage.setItem('reponseText', responseText);
-                    localStorage.setItem('responseType', responseType);
+                    finalResponseText = responseText;
+                    finalResponseType = responseType;
                 }
             })
         });
@@ -211,6 +226,11 @@
                 const selectInputs = document.querySelectorAll('select[data-question]');
                 selectInputs.forEach(select => {
                     select.value = "";
+                });
+
+                const checkboxButtons = document.querySelectorAll('input[type="checkbox"]');
+                checkboxButtons.forEach(input => {
+                    input.checked = false;
                 });
 
                 step.formula.responses.forEach(response => {
@@ -244,6 +264,14 @@
                             values[stepData][questionKey] = $(this).val();
                         } else if ($(this).is('select[data-question]')) {
                             values[stepData][questionKey] = $(this).val();
+                        } else if ($(this).is('input[type="checkbox"]:checked')) { 
+                            if (!values[stepData][questionKey]) {
+                                values[stepData][questionKey] = [];
+                            }
+                            values[stepData][questionKey].push({
+                                id: $(this).data('id'),
+                                value: $(this).val()
+                            });
                         }
                     });
                 }
@@ -268,6 +296,7 @@
             const protocolUuid = parts[parts.length - 1];
 
             $('.step').each(function() {
+                $('.calculate-step').click();
                 const stepData = $(this).data('step');
                 
                 if (stepData <= currentStep) {
@@ -283,12 +312,20 @@
                             values[stepData][questionKey] = $(this).val();
                         } else if ($(this).is('select[data-question]')) {
                             values[stepData][questionKey] = $(this).val();
+                        } else if ($(this).is('input[type="checkbox"]:checked')) { 
+                            if (!values[stepData][questionKey]) {
+                                values[stepData][questionKey] = [];
+                            }
+                            values[stepData][questionKey].push({
+                                id: $(this).data('id'),
+                                value: $(this).val()
+                            });
                         }
                     });
                 }
             });
 
-            axios.put('/response/' + protocolUuid, {'data': values}).then((response) => {
+            axios.put('/response/' + protocolUuid, {'data': values, 'responseText': finalResponseText, 'responseType': finalResponseType}).then((response) => {
                 if (response.status == 200) {
                    window.location.href = '/form/form/protocol/' + protocolUuid;
                 }

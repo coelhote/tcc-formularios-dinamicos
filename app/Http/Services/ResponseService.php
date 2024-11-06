@@ -16,18 +16,16 @@ class ResponseService
 
         try {
             DB::beginTransaction(); 
-            Log::info('entrou');
+            
             if ($uuid) {
-                Log::info('tem uuid');
+                
                 $response = Response::where('uuid', $uuid)->first();
-
                 if (!$response) {
-                    Log::info('não encontrado');
                     throw new Exception("Não encontrado", 404);
                 }
 
             } else {
-                Log::info('não tem uuid');
+                
                 $response = new Response();
                 $lastInserted = Response::orderBy('id', 'desc')->first();
                 $next = $lastInserted ? $lastInserted->id + 1 : 1;
@@ -36,10 +34,12 @@ class ResponseService
                 $response->protocol = Carbon::now()->format('Ymd') . str_pad($next, 5, '0', STR_PAD_LEFT);
                 $response->form_id = $body['form_id'];
             }
-            Log::info('saiu bloco if');
+            
             $response->data = array_key_exists('data', $body) ? json_encode($body['data']) : '{}';
+            $response->responseType = array_key_exists('responseType', $body) ? $body['responseType'] : '';
+            $response->responseText =  array_key_exists('responseText', $body) ? $body['responseText'] : '';
             $response->saveOrFail();
-            Log::info('salvou');
+            
             DB::commit();
 
             return response()->json(['uuid' => $response->uuid], 200);

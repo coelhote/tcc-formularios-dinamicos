@@ -28,7 +28,7 @@
                         </div>
                         </label>
                     </div>
-                <!-- <div class="col-sm-3 col-md-3">
+                <div class="col-sm-3 col-md-3">
                         <label class="select-type-answer">
                         <input type="radio" name="type" value="checkbox" @checked(isset($question) && $question->type == 'checkbox' )>
                         <div class="square shadow">
@@ -36,7 +36,7 @@
                             <label for="radio">Múltiplas</label>
                         </div>
                     </label>
-                </div> -->
+                </div>
                 <div class="col-sm-3 col-md-3">
                     <label class="select-type-answer">
                         <input type="radio" name="type" value="select" @checked(isset($question) && $question->type == 'select' )>

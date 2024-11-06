@@ -132,7 +132,7 @@ class FormService {
     }
 
     public function protocol($protocol) {
-        $responseData = Response::select('protocol', 'form_id')->with('form')->where('uuid', $protocol)->first();
+        $responseData = Response::select('protocol', 'form_id', 'responseType', 'responseText')->with('form')->where('uuid', $protocol)->first();
 
         return $responseData;
     }

@@ -17,8 +17,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const responseType = localStorage.getItem('responseType');
-
         function getProtocolData() {
             $('#loading').show();
 
@@ -39,9 +37,6 @@
         }
 
         function createHtml(data) {
-            const responseType = localStorage.getItem('responseType');
-            const responseText = localStorage.getItem('reponseText');
-
             $('.response').append(
                 $('<h3>', {
                     style: 'text-decoration: underline'
@@ -54,8 +49,8 @@
                 $('<p>').text('onde o resultado foi: ').append(
                     $('<span>', {
                         style: 'text-decoration: underline',
-                        class: responseType
-                    }).text(responseText)
+                        class: data.responseType
+                    }).text(data.responseText)
                 ),
             );
         }
