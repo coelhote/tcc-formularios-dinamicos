@@ -8,7 +8,7 @@
     <h2 class="text-center mb-4">Listagem de Perguntas</h2>
 
     <div class="mb-3 text-end">
-        <a href="{{ route('questions.create') }}" class="btn btn-primary">Cadastrar Pergunta</a>
+        <a href="{{ route('questions.create') }}" class="btn btn-primary"><span class="fas fa-add">&nbsp;</span>Cadastrar Pergunta</a>
     </div>
 
     <div class="table-responsive">
@@ -27,9 +27,9 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $question['description'] }}</td>
                     <td>{{ $question['type'] }}</td>
-                    <td>
-                        <a href="{{ route('questions.edit', $question['id']) }}" class="btn btn-sm btn-warning">Editar</a>
-                        <a class="btn btn-sm btn-danger" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $question['id'] }}').submit();">Excluir</a>
+                    <td class="d-flex flex-row">
+                        <a href="{{ route('questions.edit', $question['id']) }}" class="btn btn-sm"><span class="fas fa-edit"></span></a>
+                        <a class="btn btn-sm" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $question['id'] }}').submit();"><span class="fas fa-trash"></span></a>
                         <form id="delete-form-{{ $question['id'] }}" action="{{ route('questions.destroy', $question['id']) }}" method="POST" style="display: none;">
                             @csrf
                             @method('POST')

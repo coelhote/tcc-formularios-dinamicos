@@ -8,7 +8,7 @@
     <h2 class="text-center mb-4">Listagem de Formulários</h2>
 
     <div class="mb-3 text-end">
-        <a href="{{ route('forms.create') }}" class="btn btn-primary">Cadastrar Formulário</a>
+        <a href="{{ route('forms.create') }}" class="btn btn-primary"><span class="fas fa-add">&nbsp;</span>Cadastrar Formulário</a>
     </div>
 
     <div class="table-responsive">
@@ -30,9 +30,9 @@
                         $formattedDate = \Carbon\Carbon::parse($form['updated_at'])->format('d/m/Y H:i');
                     @endphp
                     <td>{{ $formattedDate }}</td>
-                    <td>
-                        <a href="{{ route('forms.edit', $form['id']) }}" class="btn btn-sm btn-warning">Editar</a>
-                        <a class="btn btn-sm btn-danger" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $form['id'] }}').submit();">Excluir</a>
+                    <td class="d-flex flex-row">
+                        <a href="{{ route('forms.edit', $form['id']) }}" class="btn btn-sm"><span class="fas fa-edit"></span></a>
+                        <a class="btn btn-sm" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $form['id'] }}').submit();"><span class="fas fa-trash"></span></a>
                         <form id="delete-form-{{ $form['id'] }}" action="{{ route('forms.destroy', $form['id']) }}" method="POST" style="display: none;">
                             @csrf
                             @method('POST')
