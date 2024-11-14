@@ -154,7 +154,7 @@
                 if (!values[questionKey]) {
                     values[questionKey] = [];
                 }
-                values[questionKey].push(input.value); // Armazena valores selecionados em um array
+                values[questionKey] = (values[questionKey] || 0) + (input.value ? input.value : 0);
             });
 
             steps.forEach(step => {
