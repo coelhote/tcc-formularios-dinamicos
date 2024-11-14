@@ -14,9 +14,22 @@ class ResponseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $protocol = $request->input('protocol');
+
+        if ($protocol) {
+            $responses = Response::where('protocol', 'like', "%{$protocol}%")->get();
+        } else {
+            $responses = Response::all();
+        }
+
+        $service = new ResponseService();
+        $responses = $service->findResponseByProtocol($protocol);
+
+        $responseCount = $responses->count();
+
+        return view('response', compact('responses', 'responseCount', 'protocol'));
     }
 
     /**

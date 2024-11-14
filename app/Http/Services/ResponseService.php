@@ -12,6 +12,17 @@ use Illuminate\Support\Facades\Log;
 class ResponseService
 {
 
+    public function findResponseByProtocol($protocol)
+    {
+        if ($protocol) {
+            $responses = Response::with('form')->where('protocol', 'like', "%{$protocol}%")->get();
+        } else {
+            $responses = Response::with('form')->get();
+        }
+
+        return $responses;
+    }
+
     public function saveOrUpdate($body, $uuid = null) {
 
         try {

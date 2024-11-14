@@ -40,6 +40,8 @@ Route::get('/form/form/protocol/{protocol}', function () {
     return view('form-protocol');
 });
 
+Route::get('/responses', [ResponseController::class, 'index'])->name('responses.index');
+
 /** Response **/
 Route::resource('/response', ResponseController::class);
 
